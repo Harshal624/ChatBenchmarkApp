@@ -58,6 +58,41 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra(ChatRoomActivity.KEY_CHAT_ROOM_TYPE, ChatRoomType.LIVE_DATA)
             startActivity(intent)
         }
+
+        binding.btnChatsLivedata2.setOnClickListener {
+            val intent = getChatRoomActivityIntent()
+            intent.putExtra(ChatRoomActivity.KEY_SOURCE_IUID, Chat.CHAT_ROOM_2)
+            intent.putExtra(ChatRoomActivity.KEY_CHAT_ROOM_TYPE, ChatRoomType.LIVE_DATA)
+            startActivity(intent)
+        }
+
+        binding.btnChatsSimpleList.setOnClickListener {
+            val intent = getChatRoomActivityIntent()
+            intent.putExtra(ChatRoomActivity.KEY_SOURCE_IUID, Chat.CHAT_ROOM_1)
+            intent.putExtra(ChatRoomActivity.KEY_CHAT_ROOM_TYPE, ChatRoomType.SIMPLE_LIST)
+            startActivity(intent)
+        }
+
+        binding.btnChatsSimpleList2.setOnClickListener {
+            val intent = getChatRoomActivityIntent()
+            intent.putExtra(ChatRoomActivity.KEY_SOURCE_IUID, Chat.CHAT_ROOM_2)
+            intent.putExtra(ChatRoomActivity.KEY_CHAT_ROOM_TYPE, ChatRoomType.SIMPLE_LIST)
+            startActivity(intent)
+        }
+
+        binding.btnChatsPaging.setOnClickListener {
+            val intent = getChatRoomActivityIntent()
+            intent.putExtra(ChatRoomActivity.KEY_SOURCE_IUID, Chat.CHAT_ROOM_1)
+            intent.putExtra(ChatRoomActivity.KEY_CHAT_ROOM_TYPE, ChatRoomType.PAGING)
+            startActivity(intent)
+        }
+
+        binding.btnChatsPaging2.setOnClickListener {
+            val intent = getChatRoomActivityIntent()
+            intent.putExtra(ChatRoomActivity.KEY_SOURCE_IUID, Chat.CHAT_ROOM_2)
+            intent.putExtra(ChatRoomActivity.KEY_CHAT_ROOM_TYPE, ChatRoomType.PAGING)
+            startActivity(intent)
+        }
     }
 
     private fun getChatRoomActivityIntent(): Intent {
