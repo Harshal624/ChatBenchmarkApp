@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_total_chats"
+            android:text="Total chats: 0"
+            android:gravity="start"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="12dp"
+            />
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Chat room 1"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_no_of_chats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No. of chats: 0"
+            android:padding="12dp"
+            android:textSize="18sp"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:text="Add chats"
+            android:id="@+id/btn_add_chats"
+            style="@style/CustomButton"
+            />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekbar_chat_1"
+            android:layout_marginTop="8dp"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:text="Clear all chats"
+            android:id="@+id/btn_clear_chats"
+            style="@style/CustomButton"
+            android:layout_marginTop="14dp"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/CustomButton"
+            android:text="Chats with simple list"
+            android:id="@+id/btn_chats_simple_list"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/CustomButton"
+            android:text="Chats with livedata"
+            android:id="@+id/btn_chats_livedata"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/CustomButton"
+            android:text="Chats with paging"
+            android:id="@+id/btn_chats_paging"
+            />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_marginTop="12dp"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Chat room 2"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_no_of_chats_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No. of chats: 0"
+            android:padding="12dp"
+            android:textSize="18sp"
+            />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:text="Add chats"
+            android:id="@+id/btn_add_chats_2"
+            style="@style/CustomButton"
+            />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekbar_chat_2"
+            android:layout_marginTop="8dp"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:text="Clear all chats"
+            android:id="@+id/btn_clear_chats_2"
+            style="@style/CustomButton"
+            android:layout_marginTop="14dp"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/CustomButton"
+            android:text="Chats with simple list"
+            android:id="@+id/btn_chats_simple_list_2"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/CustomButton"
+            android:text="Chats with livedata"
+            android:id="@+id/btn_chats_livedata_2"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/CustomButton"
+            android:text="Chats with paging"
+            android:id="@+id/btn_chats_paging_2"
+            />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+</ScrollView>
