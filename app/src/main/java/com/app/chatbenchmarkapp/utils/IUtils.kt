@@ -37,7 +37,8 @@ object IUtils {
         "Comrades",
         "Ryan",
         "However",
-        "Vampire"
+        "Vampire",
+        "InTouch"
     )
 
     fun getRandomChat(): String {

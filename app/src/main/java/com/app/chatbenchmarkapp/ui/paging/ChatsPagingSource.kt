@@ -1,6 +1,5 @@
 package com.app.chatbenchmarkapp.ui.paging
 
-import android.util.Log
 import androidx.paging.PagingState
 import com.app.chatbenchmarkapp.db.Chat
 import com.app.chatbenchmarkapp.db.ChatDao
@@ -17,8 +16,10 @@ class ChatsPagingSource(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Chat> {
+
         val page = params.key ?: 0
         val offset = page * params.loadSize
+
         val chats = dao.getPagedChatList(
             sourceIuid = sourceIuid,
             limit = params.loadSize,
