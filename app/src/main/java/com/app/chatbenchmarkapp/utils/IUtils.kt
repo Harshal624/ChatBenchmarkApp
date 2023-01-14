@@ -1,5 +1,6 @@
 package com.app.chatbenchmarkapp.utils
 
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -46,5 +47,10 @@ object IUtils {
             words.add(randomWords.random())
         }
         return words.joinToString(separator = " ")
+    }
+
+    fun getDateAndTime(time: Long): String {
+        val date = Date(time)
+        return SimpleDateFormat("hh:mm aa").format(date)
     }
 }

@@ -26,7 +26,7 @@ class ChatRoomViewModel(
 
             val row = dao.insertSingleChat(
                 Chat(
-                    isSelf = false,
+                    isSelf = true,
                     text = text,
                     iuid = IUtils.getRandomIuidsForDebugging(),
                     timeCreated = System.currentTimeMillis(),
