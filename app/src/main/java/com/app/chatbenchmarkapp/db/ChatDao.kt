@@ -11,8 +11,14 @@ interface ChatDao {
     @Insert
     suspend fun insertChats(list: List<Chat>)
 
-    @Query("SELECT * FROM chats WHERE sourceIuid = :sourceIuid")
-    fun getAllChatsForSourceIuid(sourceIuid: String): LiveData<List<Chat>>
+    @Insert
+    suspend fun insertSingleChat(chat: Chat)
+
+    @Query("SELECT * FROM chats WHERE sourceIuid = :sourceIuid ORDER BY timeCreated ASC")
+    fun getAllChatsLiveData(sourceIuid: String): LiveData<List<Chat>>
+
+    @Query("SELECT * FROM chats WHERE sourceIuid = :sourceIuid ORDER BY timeCreated ASC")
+    suspend fun getAllChatsList(sourceIuid: String): List<Chat>
 
     @Query("SELECT COUNT(*) FROM chats")
     fun getTotalChatCount(): LiveData<Int>

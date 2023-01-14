@@ -2,13 +2,13 @@ package com.app.chatbenchmarkapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import com.app.chatbenchmarkapp.MainViewModel
-import com.app.chatbenchmarkapp.MainViewModelFactory
-import com.app.chatbenchmarkapp.R
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.app.chatbenchmarkapp.databinding.ActivityChatRoomBinding
 import com.app.chatbenchmarkapp.db.AppDatabase
-import com.app.chatbenchmarkapp.utils.showToast
+import com.app.chatbenchmarkapp.ui.adapters.ChatListAdapter
 
 enum class ChatRoomType {
     LIVE_DATA, SIMPLE_LIST, PAGING
@@ -26,6 +26,10 @@ class ChatRoomActivity : AppCompatActivity() {
 
     private lateinit var viewModel: ChatRoomViewModel
 
+    private lateinit var chatListAdapterForList: ChatListAdapter
+
+    private lateinit var chatListAdapterForLiveData: ChatListAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityChatRoomBinding.inflate(layoutInflater)
@@ -42,5 +46,56 @@ class ChatRoomActivity : AppCompatActivity() {
                 chatRoomType = chatRoomType
             )
         )[ChatRoomViewModel::class.java]
+
+        setUpRecyclerViews(chatRoomType)
+
+        viewModel.uiState.observe(this) { state ->
+            if (state.isLoading) {
+                binding.progressbar.visibility = View.VISIBLE
+            } else {
+                binding.progressbar.visibility = View.GONE
+            }
+
+            if (chatRoomType == ChatRoomType.SIMPLE_LIST && state.chatList.isNotEmpty()) {
+                chatListAdapterForList.submitList(state.chatList)
+            }
+        }
+
+        viewModel.chatLivedata?.observe(this) { list ->
+            chatListAdapterForLiveData.submitList(list)
+        }
+
+        binding.btnSendChat.setOnClickListener {
+            val text = binding.et.text.toString().trim()
+            if (text.isBlank()) {
+                return@setOnClickListener
+            }
+
+            viewModel.sendLocalChat(text = text)
+            binding.et.text = null
+        }
+    }
+
+    private fun setUpRecyclerViews(chatRoomType: ChatRoomType) {
+        chatListAdapterForList = ChatListAdapter()
+        chatListAdapterForLiveData = ChatListAdapter()
+
+        binding.recyclerview.apply {
+            val manager = LinearLayoutManager(this@ChatRoomActivity, RecyclerView.VERTICAL, false)
+            setHasFixedSize(false)
+            manager.stackFromEnd = true
+            layoutManager = manager
+            when (chatRoomType) {
+                ChatRoomType.LIVE_DATA -> {
+                    adapter = chatListAdapterForLiveData
+                }
+                ChatRoomType.SIMPLE_LIST -> {
+                    adapter = chatListAdapterForList
+                }
+                ChatRoomType.PAGING -> {
+                    // TODO Implement this later
+                }
+            }
+        }
     }
 }

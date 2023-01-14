@@ -13,7 +13,8 @@ data class Chat(
     val iuid: String,
     val text: String,
     val timeCreated: Long,
-    val sourceIuid: String
+    val sourceIuid: String,
+    val isSelf: Boolean
 ) {
     companion object {
         const val CHAT_ROOM_1 = "chat room 1"
