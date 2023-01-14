@@ -3,16 +3,17 @@ package com.app.chatbenchmarkapp.db
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
 interface ChatDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertChats(list: List<Chat>)
 
-    @Insert
-    suspend fun insertSingleChat(chat: Chat)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertSingleChat(chat: Chat): Long
 
     @Query("SELECT * FROM chats WHERE sourceIuid = :sourceIuid ORDER BY timeCreated ASC")
     fun getAllChatsLiveData(sourceIuid: String): LiveData<List<Chat>>

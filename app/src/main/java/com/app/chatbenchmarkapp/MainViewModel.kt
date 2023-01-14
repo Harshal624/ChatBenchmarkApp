@@ -3,10 +3,14 @@ package com.app.chatbenchmarkapp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.app.chatbenchmarkapp.db.Chat
 import com.app.chatbenchmarkapp.db.ChatDao
+import com.app.chatbenchmarkapp.utils.IUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val dao: ChatDao
@@ -26,14 +30,37 @@ class MainViewModel(
     val totalChatCountChatRoom2 = dao.getTotalChatCountOfSource(sourceIuid = Chat.CHAT_ROOM_1)
 
     fun addChats(sourceIuid: String) {
-        when (sourceIuid) {
-            Chat.CHAT_ROOM_1 -> {
-                showUserMessage("Adding ${_seekbar1Progress.value} chats")
-            }
-            else -> {
-                showUserMessage("Adding ${_seekbar2Progress.value} chats")
+        viewModelScope.launch(Dispatchers.IO) {
+            when (sourceIuid) {
+                Chat.CHAT_ROOM_1 -> {
+                    showUserMessage("Adding ${_seekbar1Progress.value} chats")
+                    addRandomChats(sourceIuid, seekBar1Progress.value ?: 0)
+                }
+                else -> {
+                    showUserMessage("Adding ${_seekbar2Progress.value} chats")
+                    addRandomChats(sourceIuid, seekbar2Progress.value ?: 0)
+                }
             }
         }
+    }
+
+    /**
+     * @param count: How many chats needs to be added
+     */
+    private suspend fun addRandomChats(sourceIuid: String, count: Int) {
+        val chatListToAdd = mutableListOf<Chat>()
+        for (i in 1..count) {
+            chatListToAdd.add(
+                Chat(
+                    text = IUtils.getRandomChat(),
+                    iuid = IUtils.getRandomIuidsForDebugging(),
+                    timeCreated = System.currentTimeMillis(),
+                    isSelf = (1..2).random() == 1,
+                    sourceIuid = sourceIuid
+                )
+            )
+        }
+        dao.insertChats(chatListToAdd)
     }
 
     fun onProgressBarChanged1(progress: Int) {

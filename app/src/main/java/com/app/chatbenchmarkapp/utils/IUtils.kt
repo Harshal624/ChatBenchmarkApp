@@ -4,12 +4,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 object IUtils {
-    fun getRandomIuidsForDebugging(count: Int): List<String> {
-        val list = mutableListOf<String>()
-        for (i in 1..count) {
-            list.add(IuidGenerator.getIuid("icm"))
-        }
-        return list
+    fun getRandomIuidsForDebugging(): String {
+        return IuidGenerator.getIuid("icm")
     }
 
     @JvmStatic
@@ -22,5 +18,33 @@ object IUtils {
     fun getRandomNumber(high: Int): Int {
         val r = Random()
         return r.nextInt(high)
+    }
+
+    private val randomWords = listOf<String>(
+        "Hello",
+        "Hey",
+        "Good Morning",
+        "Mouse",
+        "Jack",
+        "Kitchen",
+        "Guy",
+        "Minute",
+        "Asked",
+        "Precision",
+        "Red Army",
+        "Second",
+        "Comrades",
+        "Ryan",
+        "However",
+        "Vampire"
+    )
+
+    fun getRandomChat(): String {
+        val words = mutableListOf<String>()
+        val length = (1..12).random()
+        for (i in 1..length) {
+            words.add(randomWords.random())
+        }
+        return words.joinToString(separator = " ")
     }
 }

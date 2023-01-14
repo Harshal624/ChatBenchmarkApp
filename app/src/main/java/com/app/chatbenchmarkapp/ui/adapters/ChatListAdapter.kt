@@ -9,7 +9,9 @@ import com.app.chatbenchmarkapp.databinding.ItemChatLocalUserBinding
 import com.app.chatbenchmarkapp.databinding.ItemChatRemoteUserBinding
 import com.app.chatbenchmarkapp.db.Chat
 
-class ChatListAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(chatDiffUtil()) {
+class ChatListAdapter(
+    private val onListChanged: (Int) -> Unit
+) : ListAdapter<Chat, RecyclerView.ViewHolder>(chatDiffUtil()) {
 
     companion object {
 
@@ -57,6 +59,17 @@ class ChatListAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(chatDiffUtil(
             VIEW_TYPE_SELF
         } else {
             VIEW_TYPE_REMOTE
+        }
+    }
+
+    override fun onCurrentListChanged(
+        previousList: MutableList<Chat>,
+        currentList: MutableList<Chat>
+    ) {
+        super.onCurrentListChanged(previousList, currentList)
+
+        if (currentList.size == previousList.size + 1) {
+            onListChanged(currentList.size + 1)
         }
     }
 }

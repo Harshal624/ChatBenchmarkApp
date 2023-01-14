@@ -21,15 +21,34 @@ class ChatRoomViewModel(
 
     fun sendLocalChat(text: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            dao.insertSingleChat(
+
+            val timeStarted = System.currentTimeMillis()
+
+            val row = dao.insertSingleChat(
                 Chat(
                     isSelf = false,
                     text = text,
-                    iuid = IUtils.getRandomIuidsForDebugging(1).first(),
+                    iuid = IUtils.getRandomIuidsForDebugging(),
                     timeCreated = System.currentTimeMillis(),
                     sourceIuid = sourceIuid
                 )
             )
+
+            // Chat of iuid already exists
+            if (row == -1L) {
+                _uiState.update { state ->
+                    state.copy(message = "Failed to insert a chat")
+                }
+            } else {
+                // Success
+                _uiState.update { state ->
+                    state.copy(onNewChatAdded = "Time took to insert a new chat: ${System.currentTimeMillis() - timeStarted} ms")
+                }
+
+                if (chatRoomType == ChatRoomType.SIMPLE_LIST) {
+                    getAllChatList()
+                }
+            }
         }
     }
 
@@ -49,20 +68,40 @@ class ChatRoomViewModel(
                 )
             }
 
-            viewModelScope.launch(Dispatchers.IO) {
-                _uiState.update { state ->
-                    state.copy(
-                        isLoading = false,
-                        chatList = dao.getAllChatsList(sourceIuid = sourceIuid)
-                    )
-                }
+            getAllChatList()
+
+        }
+    }
+
+    private fun getAllChatList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _uiState.update { state ->
+                state.copy(
+                    isLoading = false,
+                    chatList = dao.getAllChatsList(sourceIuid = sourceIuid)
+                )
             }
+        }
+    }
+
+
+    fun onNewAddedActionPerformed() {
+        _uiState.update { state ->
+            state.copy(onNewChatAdded = null)
+        }
+    }
+
+    fun onMessageShown() {
+        _uiState.update { state ->
+            state.copy(message = null)
         }
     }
 
     data class UiState(
         val isLoading: Boolean = false,
-        val chatList: List<Chat> = emptyList()
+        val chatList: List<Chat> = emptyList(),
+        val onNewChatAdded: String? = null,
+        val message: String? = null
     )
 }
 
