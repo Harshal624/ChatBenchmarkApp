@@ -94,6 +94,12 @@ class MainViewModel(
     fun clearChats(sourceIuid: String) {
         viewModelScope.launch(Dispatchers.IO) {
             dao.clearChatsOfSource(sourceIuid = sourceIuid)
+
+            if (sourceIuid == Chat.CHAT_ROOM_1) {
+                showUserMessage("All chats cleared of chat tab 1")
+            } else {
+                showUserMessage("All chats cleared of chat tab 2")
+            }
         }
     }
 

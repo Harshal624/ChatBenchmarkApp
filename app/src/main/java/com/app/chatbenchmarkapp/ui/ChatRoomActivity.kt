@@ -142,31 +142,52 @@ class ChatRoomActivity : AppCompatActivity() {
             }
         }
 
-        chatPagingAdapter.registerAdapterDataObserver(object :
-            RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart == 0) {
-                    binding.recyclerview.scrollToPosition(positionStart)
-                }
+        when (chatRoomType) {
+            ChatRoomType.LIVE_DATA -> {
+                chatListAdapterForLiveData.registerAdapterDataObserver(object :
+                    RecyclerView.AdapterDataObserver() {
+                    override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                        if (positionStart > 0) {
+                            binding.recyclerview.scrollToPosition(positionStart)
+                        }
+                    }
+                })
             }
-        })
+            ChatRoomType.SIMPLE_LIST -> {
+                chatListAdapterForList.registerAdapterDataObserver(object :
+                    RecyclerView.AdapterDataObserver() {
+                    override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                        if (positionStart > 0) {
+                            binding.recyclerview.scrollToPosition(positionStart)
+                        }
+                    }
+                })
+            }
+            ChatRoomType.PAGING -> {
 
-        chatListAdapterForLiveData.registerAdapterDataObserver(object :
-            RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart > 0) {
-                    binding.recyclerview.scrollToPosition(positionStart)
-                }
-            }
-        })
+                chatPagingAdapter.registerAdapterDataObserver(object :
+                    RecyclerView.AdapterDataObserver() {
+                    override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                        if (positionStart == 0) {
+                            binding.recyclerview.scrollToPosition(positionStart)
+                        }
+                    }
+                })
 
-        chatListAdapterForList.registerAdapterDataObserver(object :
-            RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart > 0) {
-                    binding.recyclerview.scrollToPosition(positionStart)
+                chatPagingAdapter.addLoadStateListener { state ->
+                    when (state.refresh) {
+                        is LoadState.Loading -> {
+                            binding.progressbar.visibility = View.VISIBLE
+                        }
+                        is LoadState.NotLoading -> {
+                            binding.progressbar.visibility = View.GONE
+                        }
+                        is LoadState.Error -> {
+                            binding.progressbar.visibility = View.GONE
+                        }
+                    }
                 }
             }
-        })
+        }
     }
 }
