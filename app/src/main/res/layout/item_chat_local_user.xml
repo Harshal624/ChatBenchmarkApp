@@ -6,6 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginEnd="8dp"
     android:layout_marginTop="8dp"
+    android:layout_marginStart="12dp"
     >
 
     <com.google.android.material.card.MaterialCardView
@@ -14,13 +15,34 @@
         style="@style/CustomMaterial"
         android:layout_gravity="end"
         >
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv"
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Hey, Good morning"
-            android:padding="8dp"
-            />
+            android:orientation="vertical"
+            >
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Hey, Good morning"
+                android:padding="8dp"
+                />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:layout_gravity="end"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:paddingBottom="2dp"
+                android:id="@+id/tv_time"
+                tools:text="2:35 PM"
+                />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
     </com.google.android.material.card.MaterialCardView>
 
 

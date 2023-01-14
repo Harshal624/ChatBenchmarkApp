@@ -28,8 +28,10 @@ class MainActivity : AppCompatActivity() {
             this,
             MainViewModelFactory(AppDatabase.getDatabase(this).chatDao())
         )[MainViewModel::class.java]
+
         setUpSeekbars()
         observeUiState()
+
         viewModel.totalChatCount.observe(this) { count ->
             binding.tvTotalChats.text = "Total chats: $count"
         }

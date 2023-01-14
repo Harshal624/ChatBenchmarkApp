@@ -49,6 +49,10 @@ class ChatRoomActivity : AppCompatActivity() {
         val chatRoomType = intent.getSerializableExtra(KEY_CHAT_ROOM_TYPE) as ChatRoomType
         val chatRoomId = intent.getStringExtra(KEY_SOURCE_IUID)
 
+        if (chatRoomType == ChatRoomType.LIVE_DATA) {
+            binding.progressbar.visibility = View.VISIBLE
+        }
+
         viewModel = ViewModelProvider(
             this,
             ChatRoomViewModelFactory(
@@ -61,10 +65,14 @@ class ChatRoomActivity : AppCompatActivity() {
         setUpRecyclerViews(chatRoomType)
 
         viewModel.uiState.observe(this) { state ->
-            if (state.isLoading) {
-                binding.progressbar.visibility = View.VISIBLE
-            } else {
-                binding.progressbar.visibility = View.GONE
+
+            if (chatRoomType == ChatRoomType.SIMPLE_LIST) {
+                if (state.isLoading) {
+                    binding.progressbar.visibility = View.VISIBLE
+                } else {
+
+                    binding.progressbar.visibility = View.GONE
+                }
             }
 
             if (chatRoomType == ChatRoomType.SIMPLE_LIST && state.chatList.isNotEmpty()) {
@@ -84,6 +92,7 @@ class ChatRoomActivity : AppCompatActivity() {
         }
 
         viewModel.chatLivedata?.observe(this) { list ->
+            binding.progressbar.visibility = View.GONE
             chatListAdapterForLiveData.submitList(list)
         }
 

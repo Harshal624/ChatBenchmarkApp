@@ -21,12 +21,19 @@
             android:layout_marginTop="8dp"
             android:layout_marginStart="12dp"
             />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_marginTop="12dp"
+            android:layout_height="2dp"/>
+
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Chat room 1"
+            android:text="Chat Tab 1"
             android:textStyle="bold"
+            android:textSize="18sp"
             android:layout_marginTop="12dp"
             />
 
@@ -36,7 +43,6 @@
             android:layout_height="wrap_content"
             android:text="No. of chats: 0"
             android:padding="12dp"
-            android:textSize="18sp"
             />
 
         <com.google.android.material.button.MaterialButton
@@ -89,15 +95,16 @@
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_marginTop="12dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="2dp"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Chat room 2"
+            android:text="Chat Tab 2"
             android:textStyle="bold"
             android:layout_marginTop="12dp"
+            android:textSize="18sp"
             />
 
         <com.google.android.material.textview.MaterialTextView
@@ -106,7 +113,6 @@
             android:layout_height="wrap_content"
             android:text="No. of chats: 0"
             android:padding="12dp"
-            android:textSize="18sp"
             />
 
 
