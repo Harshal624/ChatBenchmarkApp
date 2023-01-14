@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         // Add chats in chat room 2
         binding.btnAddChats2.setOnClickListener {
-            viewModel.addChats(sourceIuid = Chat.CHAT_ROOM_2, bulkInsert = binding.switch1.isChecked)
+            viewModel.addChats(sourceIuid = Chat.CHAT_ROOM_2, bulkInsert = binding.switch2.isChecked)
         }
 
         binding.btnChatsLivedata.setOnClickListener {

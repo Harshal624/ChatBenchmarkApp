@@ -68,7 +68,7 @@ class MainViewModel(
                 dao.insertSingleChat(it)
             }
         }
-        showUserMessage("Time took to insert ${chatListToAdd.size} chats: ${System.currentTimeMillis() - timeStarted} ms")
+        showUserMessage("Time took to insert ${chatListToAdd.size} chats: ${System.currentTimeMillis() - timeStarted} ms, bulk ON: $bulkInsert")
     }
 
     fun onProgressBarChanged1(progress: Int) {
