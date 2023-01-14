@@ -15,8 +15,8 @@ class ChatListAdapter(
 
     companion object {
 
-        private const val VIEW_TYPE_REMOTE = 1
-        private const val VIEW_TYPE_SELF = 2
+        const val VIEW_TYPE_REMOTE = 1
+        const val VIEW_TYPE_SELF = 2
 
         fun chatDiffUtil() = object : DiffUtil.ItemCallback<Chat>() {
             override fun areItemsTheSame(oldItem: Chat, newItem: Chat): Boolean {

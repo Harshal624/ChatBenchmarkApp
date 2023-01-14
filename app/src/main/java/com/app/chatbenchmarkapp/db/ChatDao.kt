@@ -29,4 +29,7 @@ interface ChatDao {
 
     @Query("DELETE FROM chats WHERE sourceIuid = :sourceIuid")
     fun clearChatsOfSource(sourceIuid: String)
+
+    @Query("SELECT * FROM chats WHERE sourceIuid = :sourceIuid ORDER BY timeCreated DESC LIMIT :limit OFFSET :offset")
+    suspend fun getPagedChatList(sourceIuid: String, limit: Int, offset: Int): List<Chat>
 }

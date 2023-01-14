@@ -5,13 +5,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.chatbenchmarkapp.databinding.ActivityChatRoomBinding
 import com.app.chatbenchmarkapp.db.AppDatabase
 import com.app.chatbenchmarkapp.ui.adapters.ChatListAdapter
+import com.app.chatbenchmarkapp.ui.adapters.ChatPagingAdapter
 import com.app.chatbenchmarkapp.utils.IUtils
 import com.app.chatbenchmarkapp.utils.showToast
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 
 enum class ChatRoomType {
     LIVE_DATA, SIMPLE_LIST, PAGING
@@ -32,6 +38,8 @@ class ChatRoomActivity : AppCompatActivity() {
     private lateinit var chatListAdapterForList: ChatListAdapter
 
     private lateinit var chatListAdapterForLiveData: ChatListAdapter
+
+    private lateinit var chatPagingAdapter: ChatPagingAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +73,7 @@ class ChatRoomActivity : AppCompatActivity() {
 
             state.onNewChatAdded?.let { msg ->
                 showToast(msg)
+                chatPagingAdapter.refresh()
                 viewModel.onNewAddedActionPerformed()
             }
 
@@ -76,6 +85,12 @@ class ChatRoomActivity : AppCompatActivity() {
 
         viewModel.chatLivedata?.observe(this) { list ->
             chatListAdapterForLiveData.submitList(list)
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.chatPagedData?.collectLatest {
+                chatPagingAdapter.submitData(it)
+            }
         }
 
         binding.btnSendChat.setOnClickListener {
@@ -97,25 +112,38 @@ class ChatRoomActivity : AppCompatActivity() {
 
         }
 
+        chatPagingAdapter = ChatPagingAdapter()
+
         binding.recyclerview.apply {
             val manager = LinearLayoutManager(this@ChatRoomActivity, RecyclerView.VERTICAL, false)
             setHasFixedSize(false)
-            manager.stackFromEnd = true
+            manager.stackFromEnd = chatRoomType != ChatRoomType.PAGING
+            manager.reverseLayout = chatRoomType == ChatRoomType.PAGING
             layoutManager = manager
-            when (chatRoomType) {
+            adapter = when (chatRoomType) {
                 ChatRoomType.LIVE_DATA -> {
-                    adapter = chatListAdapterForLiveData
+                    chatListAdapterForLiveData
                 }
                 ChatRoomType.SIMPLE_LIST -> {
-                    adapter = chatListAdapterForList
+                    chatListAdapterForList
                 }
                 ChatRoomType.PAGING -> {
-                    // TODO Implement this later
+                    chatPagingAdapter
                 }
             }
         }
 
-        chatListAdapterForLiveData.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
+        chatPagingAdapter.registerAdapterDataObserver(object :
+            RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                if (positionStart == 0) {
+                    binding.recyclerview.scrollToPosition(positionStart)
+                }
+            }
+        })
+
+        chatListAdapterForLiveData.registerAdapterDataObserver(object :
+            RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 if (positionStart > 0) {
                     binding.recyclerview.scrollToPosition(positionStart)
@@ -123,7 +151,8 @@ class ChatRoomActivity : AppCompatActivity() {
             }
         })
 
-        chatListAdapterForList.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
+        chatListAdapterForList.registerAdapterDataObserver(object :
+            RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 if (positionStart > 0) {
                     binding.recyclerview.scrollToPosition(positionStart)

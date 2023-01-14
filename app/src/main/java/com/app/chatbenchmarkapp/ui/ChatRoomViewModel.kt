@@ -4,9 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.app.chatbenchmarkapp.MainViewModel
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import com.app.chatbenchmarkapp.db.Chat
 import com.app.chatbenchmarkapp.db.ChatDao
+import com.app.chatbenchmarkapp.ui.paging.ChatsPagingSource
 import com.app.chatbenchmarkapp.utils.IUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +21,16 @@ class ChatRoomViewModel(
     private val sourceIuid: String,
     private val chatRoomType: ChatRoomType
 ) : ViewModel() {
+
+    val chatPagedData = if (chatRoomType == ChatRoomType.PAGING) Pager(
+        PagingConfig(
+            pageSize = 50,
+            enablePlaceholders = false,
+            initialLoadSize = 50
+        ),
+    ) {
+        ChatsPagingSource(dao = dao, sourceIuid)
+    }.flow.cachedIn(viewModelScope) else null
 
     fun sendLocalChat(text: String) {
         viewModelScope.launch(Dispatchers.IO) {
