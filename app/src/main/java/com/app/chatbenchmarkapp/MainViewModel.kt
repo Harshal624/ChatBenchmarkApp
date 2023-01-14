@@ -27,18 +27,18 @@ class MainViewModel(
 
     val totalChatCount = dao.getTotalChatCount()
     val totalChatCountChatRoom1 = dao.getTotalChatCountOfSource(sourceIuid = Chat.CHAT_ROOM_1)
-    val totalChatCountChatRoom2 = dao.getTotalChatCountOfSource(sourceIuid = Chat.CHAT_ROOM_1)
+    val totalChatCountChatRoom2 = dao.getTotalChatCountOfSource(sourceIuid = Chat.CHAT_ROOM_2)
 
-    fun addChats(sourceIuid: String) {
+    fun addChats(sourceIuid: String, bulkInsert: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             when (sourceIuid) {
                 Chat.CHAT_ROOM_1 -> {
                     showUserMessage("Adding ${_seekbar1Progress.value} chats")
-                    addRandomChats(sourceIuid, seekBar1Progress.value ?: 0)
+                    addRandomChats(sourceIuid, seekBar1Progress.value ?: 0, bulkInsert = bulkInsert)
                 }
                 else -> {
                     showUserMessage("Adding ${_seekbar2Progress.value} chats")
-                    addRandomChats(sourceIuid, seekbar2Progress.value ?: 0)
+                    addRandomChats(sourceIuid, seekbar2Progress.value ?: 0, bulkInsert = bulkInsert)
                 }
             }
         }
@@ -47,7 +47,7 @@ class MainViewModel(
     /**
      * @param count: How many chats needs to be added
      */
-    private suspend fun addRandomChats(sourceIuid: String, count: Int) {
+    private suspend fun addRandomChats(sourceIuid: String, count: Int, bulkInsert: Boolean) {
         val chatListToAdd = mutableListOf<Chat>()
         for (i in 1..count) {
             chatListToAdd.add(
@@ -60,7 +60,15 @@ class MainViewModel(
                 )
             )
         }
-        dao.insertChats(chatListToAdd)
+        val timeStarted = System.currentTimeMillis()
+        if (bulkInsert) {
+            dao.insertChats(chatListToAdd)
+        } else {
+            chatListToAdd.forEach {
+                dao.insertSingleChat(it)
+            }
+        }
+        showUserMessage("Time took to insert ${chatListToAdd.size} chats: ${System.currentTimeMillis() - timeStarted} ms")
     }
 
     fun onProgressBarChanged1(progress: Int) {
@@ -80,6 +88,12 @@ class MainViewModel(
     private fun showUserMessage(msg: String?) {
         _uiState.update { state ->
             state.copy(userMessage = msg)
+        }
+    }
+
+    fun clearChats(sourceIuid: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.clearChatsOfSource(sourceIuid = sourceIuid)
         }
     }
 

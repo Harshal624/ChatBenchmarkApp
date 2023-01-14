@@ -52,6 +52,15 @@
             android:layout_marginTop="8dp"
             />
 
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bulk insert: ON"
+            android:checked="true"
+            android:layout_gravity="center"
+            />
+
         <com.google.android.material.button.MaterialButton
             android:text="Clear all chats"
             android:id="@+id/btn_clear_chats"
@@ -112,6 +121,15 @@
             android:layout_height="wrap_content"
             android:id="@+id/seekbar_chat_2"
             android:layout_marginTop="8dp"
+            />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bulk insert: ON"
+            android:checked="true"
+            android:layout_gravity="center"
             />
 
         <com.google.android.material.button.MaterialButton

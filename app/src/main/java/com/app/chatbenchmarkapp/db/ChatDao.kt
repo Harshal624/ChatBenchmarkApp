@@ -26,4 +26,7 @@ interface ChatDao {
 
     @Query("SELECT COUNT(*) FROM chats where sourceIuid = :sourceIuid")
     fun getTotalChatCountOfSource(sourceIuid: String): LiveData<Int>
+
+    @Query("DELETE FROM chats WHERE sourceIuid = :sourceIuid")
+    fun clearChatsOfSource(sourceIuid: String)
 }

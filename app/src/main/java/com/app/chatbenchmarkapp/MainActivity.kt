@@ -44,12 +44,12 @@ class MainActivity : AppCompatActivity() {
 
         // Add chats in chat room 1
         binding.btnAddChats.setOnClickListener {
-            viewModel.addChats(sourceIuid = Chat.CHAT_ROOM_1)
+            viewModel.addChats(sourceIuid = Chat.CHAT_ROOM_1, bulkInsert = binding.switch1.isChecked)
         }
 
         // Add chats in chat room 2
         binding.btnAddChats2.setOnClickListener {
-            viewModel.addChats(sourceIuid = Chat.CHAT_ROOM_2)
+            viewModel.addChats(sourceIuid = Chat.CHAT_ROOM_2, bulkInsert = binding.switch1.isChecked)
         }
 
         binding.btnChatsLivedata.setOnClickListener {
@@ -92,6 +92,22 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra(ChatRoomActivity.KEY_SOURCE_IUID, Chat.CHAT_ROOM_2)
             intent.putExtra(ChatRoomActivity.KEY_CHAT_ROOM_TYPE, ChatRoomType.PAGING)
             startActivity(intent)
+        }
+
+        binding.btnClearChats.setOnClickListener {
+            viewModel.clearChats(sourceIuid = Chat.CHAT_ROOM_1)
+        }
+
+        binding.btnClearChats2.setOnClickListener {
+            viewModel.clearChats(sourceIuid = Chat.CHAT_ROOM_2)
+        }
+
+        binding.switch1.setOnCheckedChangeListener { buttonView, isChecked ->
+            buttonView.text = "Bulk insert: ${if (isChecked) "ON" else "OFF"}"
+        }
+
+        binding.switch2.setOnCheckedChangeListener { buttonView, isChecked ->
+            buttonView.text = "Bulk insert: ${if (isChecked) "ON" else "OFF"}"
         }
     }
 
