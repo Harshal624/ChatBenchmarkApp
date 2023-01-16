@@ -72,7 +72,7 @@ class MainViewModel(
     }
 
     fun onProgressBarChanged1(progress: Int) {
-        _seekbar1Progress.value = progress * 1000
+        _seekbar1Progress.value = progress * 100
     }
 
     fun onProgressBarChanged2(progress: Int) {
