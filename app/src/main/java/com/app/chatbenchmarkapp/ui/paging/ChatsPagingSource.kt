@@ -1,5 +1,6 @@
 package com.app.chatbenchmarkapp.ui.paging
 
+import android.util.Log
 import androidx.paging.PagingState
 import com.app.chatbenchmarkapp.db.Chat
 import com.app.chatbenchmarkapp.db.ChatDao
@@ -19,6 +20,8 @@ class ChatsPagingSource(
 
         val page = params.key ?: 0
         val offset = page * params.loadSize
+
+        Log.d(TAG, "load: Page: $page, Offset: $offset")
 
         val chats = dao.getPagedChatList(
             sourceIuid = sourceIuid,

@@ -55,7 +55,7 @@ class ChatRoomViewModel(
             } else {
                 // Success
                 _uiState.update { state ->
-                    state.copy(onNewChatAdded = "Time took to insert a new chat: ${System.currentTimeMillis() - timeStarted} ms")
+                    state.copy(onNewChatAdded = "It took ${System.currentTimeMillis() - timeStarted} ms to insert a new chat")
                 }
 
                 if (chatRoomType == ChatRoomType.SIMPLE_LIST) {

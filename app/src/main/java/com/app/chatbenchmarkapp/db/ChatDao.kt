@@ -9,10 +9,10 @@ import androidx.room.Query
 @Dao
 interface ChatDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertChats(list: List<Chat>)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSingleChat(chat: Chat): Long
 
     @Query("SELECT * FROM chats WHERE sourceIuid = :sourceIuid ORDER BY timeCreated ASC")

@@ -41,6 +41,8 @@ class ChatRoomActivity : AppCompatActivity() {
 
     private lateinit var chatPagingAdapter: ChatPagingAdapter
 
+    private var isPagingProgressBarShown = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityChatRoomBinding.inflate(layoutInflater)
@@ -177,7 +179,10 @@ class ChatRoomActivity : AppCompatActivity() {
                 chatPagingAdapter.addLoadStateListener { state ->
                     when (state.refresh) {
                         is LoadState.Loading -> {
-                            binding.progressbar.visibility = View.VISIBLE
+                            if (!isPagingProgressBarShown) {
+                                binding.progressbar.visibility = View.VISIBLE
+                                isPagingProgressBarShown = true 
+                            }
                         }
                         is LoadState.NotLoading -> {
                             binding.progressbar.visibility = View.GONE
