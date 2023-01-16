@@ -28,6 +28,8 @@ class ChatRoomActivity : AppCompatActivity() {
     companion object {
         const val KEY_SOURCE_IUID = "key_source_iuid"
         const val KEY_CHAT_ROOM_TYPE = "key_chat_room_type"
+
+        const val SHOULD_JUMP_TO_LATEST_CHAT_ON_NEW_MESSAGE = true
     }
 
     private var _binding: ActivityChatRoomBinding? = null
@@ -149,8 +151,10 @@ class ChatRoomActivity : AppCompatActivity() {
                 chatListAdapterForLiveData.registerAdapterDataObserver(object :
                     RecyclerView.AdapterDataObserver() {
                     override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                        if (positionStart > 0) {
-                            binding.recyclerview.scrollToPosition(positionStart)
+                        if (SHOULD_JUMP_TO_LATEST_CHAT_ON_NEW_MESSAGE) {
+                            if (positionStart > 0) {
+                                binding.recyclerview.scrollToPosition(positionStart)
+                            }
                         }
                     }
                 })
@@ -159,8 +163,10 @@ class ChatRoomActivity : AppCompatActivity() {
                 chatListAdapterForList.registerAdapterDataObserver(object :
                     RecyclerView.AdapterDataObserver() {
                     override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                        if (positionStart > 0) {
-                            binding.recyclerview.scrollToPosition(positionStart)
+                        if (SHOULD_JUMP_TO_LATEST_CHAT_ON_NEW_MESSAGE) {
+                            if (positionStart > 0) {
+                                binding.recyclerview.scrollToPosition(positionStart)
+                            }
                         }
                     }
                 })
@@ -170,8 +176,10 @@ class ChatRoomActivity : AppCompatActivity() {
                 chatPagingAdapter.registerAdapterDataObserver(object :
                     RecyclerView.AdapterDataObserver() {
                     override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                        if (positionStart == 0) {
-                            binding.recyclerview.scrollToPosition(positionStart)
+                        if (SHOULD_JUMP_TO_LATEST_CHAT_ON_NEW_MESSAGE) {
+                            if (positionStart == 0) {
+                                binding.recyclerview.scrollToPosition(positionStart)
+                            }
                         }
                     }
                 })
