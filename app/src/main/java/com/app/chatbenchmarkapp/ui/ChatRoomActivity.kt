@@ -29,7 +29,7 @@ class ChatRoomActivity : AppCompatActivity() {
         const val KEY_SOURCE_IUID = "key_source_iuid"
         const val KEY_CHAT_ROOM_TYPE = "key_chat_room_type"
 
-        const val SHOULD_JUMP_TO_LATEST_CHAT_ON_NEW_MESSAGE = true
+        const val SHOULD_JUMP_TO_LATEST_CHAT_ON_NEW_MESSAGE = false
     }
 
     private var _binding: ActivityChatRoomBinding? = null

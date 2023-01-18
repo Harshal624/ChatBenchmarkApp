@@ -23,21 +23,27 @@ class ChatsPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Chat> {
 
-        val page = params.key ?: 0
-        val offset = page * params.loadSize
+        try {
+            val page = params.key ?: 0
+            val offset = page * params.loadSize
 
-        Log.d(TAG, "load: Page: $page, Offset: $offset")
+            Log.d(TAG, "load: Page: $page, Offset: $offset")
 
-        val chats = dao.getPagedChatList(
-            sourceIuid = sourceIuid,
-            limit = params.loadSize,
-            offset = offset
-        )
+            val chats = dao.getPagedChatList(
+                sourceIuid = sourceIuid,
+                limit = params.loadSize,
+                offset = offset
+            )
 
-        return LoadResult.Page(
-            data = chats,
-            prevKey = if (page == 0) null else page - 1,
-            nextKey = if (chats.isEmpty()) null else page + 1
-        )
+            return LoadResult.Page(
+                data = chats,
+                prevKey = if (page == 0) null else page - 1,
+                nextKey = if (chats.isEmpty()) null else page + 1
+            )
+        } catch (e: Exception) {
+            Log.d(TAG, "load: exception: $e")
+            return LoadResult.Error(e)
+        }
+        
     }
 }

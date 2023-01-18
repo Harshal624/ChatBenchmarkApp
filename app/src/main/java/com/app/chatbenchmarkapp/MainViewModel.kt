@@ -19,7 +19,7 @@ class MainViewModel(
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asLiveData()
 
-    private val _seekbar1Progress = MutableStateFlow(1000)
+    private val _seekbar1Progress = MutableStateFlow(10)
     val seekBar1Progress = _seekbar1Progress.asLiveData()
 
     private val _seekbar2Progress = MutableStateFlow(1000)
@@ -54,7 +54,7 @@ class MainViewModel(
                 Chat(
                     text = IUtils.getRandomChat(),
                     iuid = IUtils.getRandomIuidsForDebugging(),
-                    timeCreated = System.currentTimeMillis(),
+                    timeCreated = IUtils.getCurrentTimeInMicro(),
                     isSelf = (1..2).random() == 1,
                     sourceIuid = sourceIuid
                 )
@@ -72,7 +72,7 @@ class MainViewModel(
     }
 
     fun onProgressBarChanged1(progress: Int) {
-        _seekbar1Progress.value = progress * 100
+        _seekbar1Progress.value = progress * 10
     }
 
     fun onProgressBarChanged2(progress: Int) {

@@ -9,7 +9,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.app.chatbenchmarkapp.db.Chat
 import com.app.chatbenchmarkapp.db.ChatDao
-import com.app.chatbenchmarkapp.ui.paging.ChatsPagingSource
+import com.app.chatbenchmarkapp.ui.paging.ChatsTimeCreatedPagingSource
 import com.app.chatbenchmarkapp.utils.IUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +29,7 @@ class ChatRoomViewModel(
             initialLoadSize = 50
         ),
     ) {
-        ChatsPagingSource(dao = dao, sourceIuid)
+        ChatsTimeCreatedPagingSource(dao = dao, sourceIuid)
     }.flow.cachedIn(viewModelScope) else null
 
     fun sendLocalChat(text: String) {
@@ -42,7 +42,7 @@ class ChatRoomViewModel(
                     isSelf = true,
                     text = text,
                     iuid = IUtils.getRandomIuidsForDebugging(),
-                    timeCreated = System.currentTimeMillis(),
+                    timeCreated = IUtils.getCurrentTimeInMicro(),
                     sourceIuid = sourceIuid
                 )
             )
