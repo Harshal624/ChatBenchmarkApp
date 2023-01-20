@@ -45,9 +45,9 @@ class ChatsTimeCreatedPagingSource(
                 Log.d(TAG, "load: subsequent load, key: $paramInput")
 
                 if (isPrepend) {
-                    dao.getChatListByOpp(sourceIuid, paramInput).asReversed()
+                    dao.getChatListByOpp(sourceIuid, paramInput, limit = params.loadSize).asReversed()
                 } else {
-                    dao.getChatListByTc(sourceIuid, paramInput)
+                    dao.getChatListByTc(sourceIuid, paramInput, limit = params.loadSize)
                 }
             } else {
 
