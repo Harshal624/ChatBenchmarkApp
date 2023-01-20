@@ -13,11 +13,9 @@ import com.app.chatbenchmarkapp.databinding.ActivityChatRoomBinding
 import com.app.chatbenchmarkapp.db.AppDatabase
 import com.app.chatbenchmarkapp.ui.adapters.ChatListAdapter
 import com.app.chatbenchmarkapp.ui.adapters.ChatPagingAdapter
-import com.app.chatbenchmarkapp.utils.IUtils
 import com.app.chatbenchmarkapp.utils.showToast
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 
 enum class ChatRoomType {
     LIVE_DATA, SIMPLE_LIST, PAGING
@@ -100,7 +98,7 @@ class ChatRoomActivity : AppCompatActivity() {
             chatListAdapterForLiveData.submitList(list)
         }
 
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             viewModel.chatPagedData?.collectLatest {
                 chatPagingAdapter.submitData(it)
             }
@@ -109,6 +107,8 @@ class ChatRoomActivity : AppCompatActivity() {
         binding.btnSendChat.setOnClickListener {
             val text = binding.et.text.toString().trim()
             if (text.isBlank()) {
+                showToast("Refreshing adapter")
+                chatPagingAdapter.refresh()
                 return@setOnClickListener
             }
 
