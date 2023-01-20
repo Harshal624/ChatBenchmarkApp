@@ -16,16 +16,17 @@ class ChatsTimeCreatedPagingSource(
         get() = true
 
     override fun getRefreshKey(state: PagingState<Long, Chat>): Long? {
-        val value = state.anchorPosition?.let { anchorPos ->
-            state.closestItemToPosition(anchorPos)?.timeCreated
+        val chat = state.anchorPosition?.let { anchorPos ->
+            state.closestItemToPosition(anchorPos)
         }
 
-        if (value != null) {
-            Log.d(TAG, "getRefreshKey: Time created: $value, final time created: $value")
-            return value
-        }
+        /*val chat = state.anchorPosition?.let { anchorPos ->
+            state.closestPageToPosition(anchorPos).data.firstOrNull()
+        }*/
 
-        return null
+        val value = chat?.timeCreated
+        Log.d(TAG, "getRefreshKey: Anchor pos: ${state.anchorPosition}, closes chat: ${chat?.text}, closest chat created: $value")
+        return value
     }
 
     override suspend fun load(params: LoadParams<Long>): LoadResult<Long, Chat> {
@@ -47,7 +48,25 @@ class ChatsTimeCreatedPagingSource(
                 if (isPrepend) {
                     dao.getChatListByOpp(sourceIuid, paramInput, limit = params.loadSize).asReversed()
                 } else {
-                    dao.getChatListByTc(sourceIuid, paramInput, limit = params.loadSize)
+                    /**
+                     * If type is refresh and input key is not null, then we know the load was called by getRefreshKey
+                     * In that case we will perform 2 queries -> 1. Get older chats with current chat 2. Get newer chats
+                     * Then we'll append the two lists and in this case the previous key will be timeCreate of 0th chat
+                     *
+                     * Raw:
+                     * // get more chats time asc reverse and append. 0th chat -> timeCreate will be prev key
+                    // "refresh" and also key is not null
+                     *
+                     */
+                    if (isRefresh) {
+                        val oldestChat = dao.getChatListByTc(sourceIuid, paramInput, limit = params.loadSize)
+                        val newestChat = dao.getChatListByOpp(sourceIuid, paramInput, limit = params.loadSize).asReversed()
+                        val finaList = newestChat + oldestChat
+                        Log.d(TAG, "load: Final list: $finaList")
+                        finaList
+                    } else {
+                        dao.getChatListByTc(sourceIuid, paramInput, limit = params.loadSize)
+                    }
                 }
             } else {
 
@@ -78,7 +97,11 @@ class ChatsTimeCreatedPagingSource(
                     chats.firstOrNull()?.timeCreated
                 }
             } else {
-                paramInput
+                if (isRefresh) {
+                    chats.firstOrNull()?.timeCreated
+                } else {
+                    paramInput
+                }
             }
 
             Log.d(TAG, "load: Chat size: ${chats.size}, prev key: $prevKey, next key: $nextKey")
