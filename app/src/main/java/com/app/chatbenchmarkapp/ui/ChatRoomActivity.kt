@@ -115,6 +115,12 @@ class ChatRoomActivity : AppCompatActivity() {
             viewModel.sendLocalChat(text = text)
             binding.et.text = null
         }
+
+        binding.fabJumpToBottom.setOnClickListener {
+            // In the main project, refresh is done before scrolling so doing it here to reproduce the scenario
+            //chatPagingAdapter.refresh()
+            binding.recyclerview.scrollToPosition(0)
+        }
     }
 
     private fun setUpRecyclerViews(chatRoomType: ChatRoomType) {

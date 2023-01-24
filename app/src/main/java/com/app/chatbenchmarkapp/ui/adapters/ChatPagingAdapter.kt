@@ -1,5 +1,6 @@
 package com.app.chatbenchmarkapp.ui.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.app.chatbenchmarkapp.databinding.ItemChatLocalUserBinding
 import com.app.chatbenchmarkapp.databinding.ItemChatRemoteUserBinding
 import com.app.chatbenchmarkapp.databinding.ItemNoticeBinding
+import com.app.chatbenchmarkapp.databinding.ItemPlaceholderBinding
 import com.app.chatbenchmarkapp.db.Chat
 
 /**
@@ -16,15 +18,21 @@ class ChatPagingAdapter : PagingDataAdapter<Chat, RecyclerView.ViewHolder>(
     ChatListAdapter.chatDiffUtil()
 ) {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = getItem(position)
+        if (item == null) {
+            Log.d("Placeholder", "onBindViewHolder: Binding empty placeholder")
+            (holder as EmptyPlaceHolder).bind()
+            return
+        }
         when (holder) {
             is ChatViewHolderRemote -> {
-                holder.bind(getItem(position) ?: return)
+                holder.bind(item)
             }
             is NoticeViewHolder -> {
 
             }
             else -> {
-                (holder as ChatViewHolderLocal).bind(getItem(position) ?: return)
+                (holder as ChatViewHolderLocal).bind(item)
             }
         }
     }
@@ -44,10 +52,23 @@ class ChatPagingAdapter : PagingDataAdapter<Chat, RecyclerView.ViewHolder>(
                     ItemNoticeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 NoticeViewHolder(binding)
             }
+            ChatListAdapter.VIEW_TYPE_SELF -> {
+                val binding =
+                    ItemChatLocalUserBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                ChatViewHolderLocal(binding)
+            }
             else -> {
                 val binding =
-                    ItemChatLocalUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                ChatViewHolderLocal(binding)
+                    ItemPlaceholderBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                EmptyPlaceHolder(binding)
             }
         }
     }

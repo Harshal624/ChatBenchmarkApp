@@ -4,15 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
+import androidx.paging.*
 import com.app.chatbenchmarkapp.db.Chat
 import com.app.chatbenchmarkapp.db.ChatDao
 import com.app.chatbenchmarkapp.ui.paging.ChatsTimeCreatedPagingSource
 import com.app.chatbenchmarkapp.utils.IUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -30,7 +29,9 @@ class ChatRoomViewModel(
         ),
     ) {
         ChatsTimeCreatedPagingSource(dao = dao, sourceIuid)
-    }.flow.cachedIn(viewModelScope) else null
+    }.flow.map { pagingData ->
+        pagingData.insertFooterItem(item = Chat.getNoticeChatView())
+    }.cachedIn(viewModelScope) else null
 
     fun sendLocalChat(text: String) {
         viewModelScope.launch(Dispatchers.IO) {
