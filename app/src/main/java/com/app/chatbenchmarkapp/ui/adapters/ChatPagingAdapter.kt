@@ -74,11 +74,11 @@ class ChatPagingAdapter : PagingDataAdapter<Chat, RecyclerView.ViewHolder>(
     }
 
     override fun getItemViewType(position: Int): Int {
-        val chat = getItem(position)
+        val chat = getItem(position) ?: return 999
 
-        return if (chat?.isNoticeView == true) {
+        return if (chat.isNoticeView) {
             ChatListAdapter.VIEW_TYPE_NOTICE
-        } else if (chat?.isSelf == true) {
+        } else if (chat.isSelf) {
             ChatListAdapter.VIEW_TYPE_SELF
         } else {
             ChatListAdapter.VIEW_TYPE_REMOTE

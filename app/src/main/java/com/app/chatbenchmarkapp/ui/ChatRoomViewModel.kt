@@ -24,7 +24,7 @@ class ChatRoomViewModel(
     val chatPagedData = if (chatRoomType == ChatRoomType.PAGING) Pager(
         PagingConfig(
             pageSize = 50,
-            enablePlaceholders = false,
+            enablePlaceholders = true,
             initialLoadSize = 50
         ),
     ) {

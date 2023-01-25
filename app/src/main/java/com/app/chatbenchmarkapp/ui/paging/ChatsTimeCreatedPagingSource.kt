@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.paging.PagingState
 import com.app.chatbenchmarkapp.db.Chat
 import com.app.chatbenchmarkapp.db.ChatDao
+import kotlinx.coroutines.delay
 
 class ChatsTimeCreatedPagingSource(
     private val dao: ChatDao,
@@ -13,6 +14,9 @@ class ChatsTimeCreatedPagingSource(
     private val TAG = "ChatsPagingSource"
 
     override val keyReuseSupported: Boolean
+        get() = true
+
+    override val jumpingSupported: Boolean
         get() = true
 
     override fun getRefreshKey(state: PagingState<Long, Chat>): Long? {
@@ -104,11 +108,15 @@ class ChatsTimeCreatedPagingSource(
                 }
             }
 
-            Log.d(TAG, "load: Chat size: ${chats.size}, prev key: $prevKey, next key: $nextKey")
+            if (!isRefresh)
+                delay(800L)
+            val totalChatCount = dao.getTotalChatCountOfSourceValue(sourceIuid)
+            Log.d(TAG, "load: Chat size: ${chats.size}, prev key: $prevKey, next key: $nextKey, total chat count: $totalChatCount")
             return LoadResult.Page(
                 data = chats,
                 prevKey = prevKey,
-                nextKey = nextKey
+                nextKey = nextKey,
+                itemsAfter = totalChatCount - chats.size
             )
         } catch (e: Exception) {
             Log.d(TAG, "load: exception: $e")
