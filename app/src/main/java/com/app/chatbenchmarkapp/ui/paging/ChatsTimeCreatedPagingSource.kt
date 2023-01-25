@@ -108,15 +108,35 @@ class ChatsTimeCreatedPagingSource(
                 }
             }
 
-            if (!isRefresh)
-                delay(800L)
-            val totalChatCount = dao.getTotalChatCountOfSourceValue(sourceIuid)
-            Log.d(TAG, "load: Chat size: ${chats.size}, prev key: $prevKey, next key: $nextKey, total chat count: $totalChatCount")
+            val itemsBefore: Int = if (chats.isEmpty()) {
+                0
+            } else {
+                val time = chats.firstOrNull()?.timeCreated
+                if (time == null) {
+                    0
+                } else {
+                    dao.getNewerChatCountBeforeThisTime(sourceIuid = sourceIuid, timeCreated = time)
+                }
+            }
+
+            val itemsAfter: Int = if (chats.isEmpty()) {
+                0
+            } else {
+                val time = chats.lastOrNull()?.timeCreated
+                if (time == null) {
+                    0
+                } else {
+                    dao.getOldestChatCountAfterThisTime(sourceIuid = sourceIuid, timeCreated = time)
+                }
+            }
+
+            Log.d(TAG, "load: Chat size: ${chats.size}, prev key: $prevKey, next key: $nextKey, afterCount: $itemsAfter, before count: $itemsBefore")
             return LoadResult.Page(
                 data = chats,
                 prevKey = prevKey,
                 nextKey = nextKey,
-                itemsAfter = totalChatCount - chats.size
+                itemsAfter = itemsAfter,
+                itemsBefore = itemsBefore
             )
         } catch (e: Exception) {
             Log.d(TAG, "load: exception: $e")

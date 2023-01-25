@@ -41,4 +41,10 @@ interface ChatDao {
 
     @Query("SELECT * FROM chats WHERE sourceIuid = :sourceIuid ORDER BY timeCreated DESC LIMIT :limit")
     suspend fun getChatListInitial(sourceIuid: String, limit: Int): List<Chat>
+
+    @Query("SELECT COUNT(*) FROM chats WHERE sourceIuid = :sourceIuid AND timeCreated > :timeCreated")
+    suspend fun getNewerChatCountBeforeThisTime(sourceIuid: String, timeCreated: Long): Int
+
+    @Query("SELECT COUNT(*) FROM chats WHERE sourceIuid = :sourceIuid AND timeCreated < :timeCreated")
+    suspend fun getOldestChatCountAfterThisTime(sourceIuid: String, timeCreated: Long): Int
 }

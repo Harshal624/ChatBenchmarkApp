@@ -27,7 +27,7 @@ class ChatRoomActivity : AppCompatActivity() {
         const val KEY_SOURCE_IUID = "key_source_iuid"
         const val KEY_CHAT_ROOM_TYPE = "key_chat_room_type"
 
-        const val SHOULD_JUMP_TO_LATEST_CHAT_ON_NEW_MESSAGE = false
+        var SHOULD_JUMP_TO_LATEST_CHAT_ON_NEW_MESSAGE = false
     }
 
     private var _binding: ActivityChatRoomBinding? = null
@@ -112,6 +112,7 @@ class ChatRoomActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            SHOULD_JUMP_TO_LATEST_CHAT_ON_NEW_MESSAGE = true
             viewModel.sendLocalChat(text = text)
             binding.et.text = null
         }
@@ -120,6 +121,14 @@ class ChatRoomActivity : AppCompatActivity() {
             // In the main project, refresh is done before scrolling so doing it here to reproduce the scenario
             //chatPagingAdapter.refresh()
             binding.recyclerview.scrollToPosition(0)
+        }
+
+        binding.fabItemCount.setOnClickListener {
+            when (chatRoomType) {
+                ChatRoomType.LIVE_DATA -> showToast("Item count: ${chatListAdapterForLiveData.itemCount}")
+                ChatRoomType.SIMPLE_LIST -> showToast("Item count: ${chatListAdapterForList.itemCount}")
+                ChatRoomType.PAGING -> showToast("Item count: ${chatPagingAdapter.itemCount}, snapshot size: ${chatPagingAdapter.snapshot().size}")
+            }
         }
     }
 
@@ -161,6 +170,7 @@ class ChatRoomActivity : AppCompatActivity() {
                             if (positionStart > 0) {
                                 binding.recyclerview.scrollToPosition(positionStart)
                             }
+                            SHOULD_JUMP_TO_LATEST_CHAT_ON_NEW_MESSAGE = false
                         }
                     }
                 })
@@ -173,6 +183,7 @@ class ChatRoomActivity : AppCompatActivity() {
                             if (positionStart > 0) {
                                 binding.recyclerview.scrollToPosition(positionStart)
                             }
+                            SHOULD_JUMP_TO_LATEST_CHAT_ON_NEW_MESSAGE = false
                         }
                     }
                 })
@@ -186,6 +197,7 @@ class ChatRoomActivity : AppCompatActivity() {
                             if (positionStart == 0) {
                                 binding.recyclerview.scrollToPosition(positionStart)
                             }
+                            SHOULD_JUMP_TO_LATEST_CHAT_ON_NEW_MESSAGE = false
                         }
                     }
                 })
