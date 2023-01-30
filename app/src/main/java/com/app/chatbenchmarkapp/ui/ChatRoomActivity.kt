@@ -43,6 +43,10 @@ class ChatRoomActivity : AppCompatActivity() {
 
     private var isPagingProgressBarShown = false
 
+    private var isInitialLoadTasksFinished = false
+
+    private lateinit var pagingLayoutManager: LinearLayoutManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityChatRoomBinding.inflate(layoutInflater)
@@ -143,11 +147,11 @@ class ChatRoomActivity : AppCompatActivity() {
         chatPagingAdapter = ChatPagingAdapter()
 
         binding.recyclerview.apply {
-            val manager = LinearLayoutManager(this@ChatRoomActivity, RecyclerView.VERTICAL, false)
+            pagingLayoutManager = LinearLayoutManager(this@ChatRoomActivity, RecyclerView.VERTICAL, false)
             setHasFixedSize(false)
-            manager.stackFromEnd = chatRoomType != ChatRoomType.PAGING
-            manager.reverseLayout = chatRoomType == ChatRoomType.PAGING
-            layoutManager = manager
+            pagingLayoutManager.stackFromEnd = chatRoomType != ChatRoomType.PAGING
+            pagingLayoutManager.reverseLayout = chatRoomType == ChatRoomType.PAGING
+            layoutManager = pagingLayoutManager
             adapter = when (chatRoomType) {
                 ChatRoomType.LIVE_DATA -> {
                     chatListAdapterForLiveData
@@ -211,6 +215,12 @@ class ChatRoomActivity : AppCompatActivity() {
                             }
                         }
                         is LoadState.NotLoading -> {
+                            if (!isInitialLoadTasksFinished) {
+                                // Put tasks here to executed on UI thread when diffutis is done
+
+                                //
+                                isInitialLoadTasksFinished = true
+                            }
                             binding.progressbar.visibility = View.GONE
                         }
                         is LoadState.Error -> {
