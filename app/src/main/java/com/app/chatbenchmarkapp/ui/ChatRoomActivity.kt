@@ -2,7 +2,6 @@ package com.app.chatbenchmarkapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -45,7 +44,7 @@ class ChatRoomActivity : AppCompatActivity() {
 
     private var isInitialLoadTasksFinished = false
 
-    private lateinit var pagingLayoutManager: LinearLayoutManager
+    private lateinit var chatLayoutManager: LinearLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -147,11 +146,11 @@ class ChatRoomActivity : AppCompatActivity() {
         chatPagingAdapter = ChatPagingAdapter()
 
         binding.recyclerview.apply {
-            pagingLayoutManager = LinearLayoutManager(this@ChatRoomActivity, RecyclerView.VERTICAL, false)
+            chatLayoutManager = LinearLayoutManager(this@ChatRoomActivity, RecyclerView.VERTICAL, false)
             setHasFixedSize(false)
-            pagingLayoutManager.stackFromEnd = chatRoomType != ChatRoomType.PAGING
-            pagingLayoutManager.reverseLayout = chatRoomType == ChatRoomType.PAGING
-            layoutManager = pagingLayoutManager
+            chatLayoutManager.stackFromEnd = chatRoomType != ChatRoomType.PAGING
+            chatLayoutManager.reverseLayout = chatRoomType == ChatRoomType.PAGING
+            layoutManager = chatLayoutManager
             adapter = when (chatRoomType) {
                 ChatRoomType.LIVE_DATA -> {
                     chatListAdapterForLiveData
