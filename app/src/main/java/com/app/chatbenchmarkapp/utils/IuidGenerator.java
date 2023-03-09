@@ -1,6 +1,10 @@
 package com.app.chatbenchmarkapp.utils;
 
 
+import android.view.View;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import org.jetbrains.annotations.TestOnly;
 
 /**
@@ -48,5 +52,53 @@ public final class IuidGenerator {
         } else {
             return 0l;
         }
+    }
+
+    public static boolean isLastElementVisible(LinearLayoutManager linearLayoutManager, Integer totalItemCount) {
+        try {
+            if (totalItemCount == null) {
+                return false;
+            }
+            if (totalItemCount >= 1) {
+                View lastChild = linearLayoutManager.findViewByPosition(totalItemCount - 1);
+                if (lastChild != null) {
+                    if (lastChild.getVisibility() == View.VISIBLE) {
+                        return true;
+                    } else {
+                    }
+                }
+            } else {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean isFirstElementVisible(LinearLayoutManager linearLayoutManager, Integer totalItemCount) {
+
+        try {
+
+            if (totalItemCount == null) {
+                return false;
+            }
+
+            if (totalItemCount >= 1) {
+                View lastChild = linearLayoutManager.findViewByPosition(0);
+                if (lastChild != null) {
+                    if (lastChild.getVisibility() == View.VISIBLE) {
+                        return true;
+                    } else {
+                    }
+                }
+            } else {
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

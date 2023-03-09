@@ -19,7 +19,7 @@ class MainViewModel(
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asLiveData()
 
-    private val _seekbar1Progress = MutableStateFlow(10)
+    private val _seekbar1Progress = MutableStateFlow(5)
     val seekBar1Progress = _seekbar1Progress.asLiveData()
 
     private val _seekbar2Progress = MutableStateFlow(1000)
