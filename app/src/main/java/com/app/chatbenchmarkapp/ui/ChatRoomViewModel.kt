@@ -29,9 +29,9 @@ class ChatRoomViewModel(
         ),
     ) {
         ChatsTimeCreatedPagingSource(dao = dao, sourceIuid)
-    }.flow/*.map { pagingData ->
+    }.flow.map { pagingData ->
         pagingData.insertFooterItem(item = Chat.getNoticeChatView())
-    }*/.cachedIn(viewModelScope) else null
+    }.cachedIn(viewModelScope) else null
 
     fun sendLocalChat(text: String) {
         viewModelScope.launch(Dispatchers.IO) {

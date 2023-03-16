@@ -43,7 +43,7 @@ object IUtils {
 
     fun getRandomChat(): String {
         val words = mutableListOf<String>()
-        val length = (1..12).random()
+        val length = (1..100).shuffled().random()
         for (i in 1..length) {
             words.add(randomWords.random())
         }
